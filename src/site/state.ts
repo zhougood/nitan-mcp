@@ -1,5 +1,5 @@
 import type { Logger } from "../util/logger.js";
-import { HttpClient, type AuthMode, type BypassMethod } from "../http/client.js";
+import { HttpClient, type AuthMode } from "../http/client.js";
 
 export type AuthOverride = {
   site: string; // base URL or origin to match
@@ -7,9 +7,9 @@ export type AuthOverride = {
   api_username?: string;
   user_api_key?: string;
   user_api_client_id?: string;
-  username?: string; // Username for login (used with cloudscraper)
-  password?: string; // Password for login (used with cloudscraper)
-  second_factor_token?: string; // 2FA token (used with cloudscraper)
+  username?: string; // Username for login
+  password?: string; // Password for login
+  second_factor_token?: string; // 2FA token
 };
 
 function normalizeBase(url: string): string {
@@ -31,11 +31,8 @@ export class SiteState {
       timeoutMs: number;
       defaultAuth: AuthMode;
       authOverrides?: AuthOverride[];
-      bypassMethod?: BypassMethod;
-      useCloudscraper?: boolean; // Deprecated, use bypassMethod instead
-      pythonPath?: string;
     }
-  ) {}
+  ) { }
 
   getSiteBase(): string | undefined {
     return this.currentSiteBase;
@@ -55,23 +52,14 @@ export class SiteState {
 
     const auth = this.resolveAuthForSite(base);
     const loginCreds = this.resolveLoginForSite(base);
-    
-    // Determine bypass method (support legacy useCloudscraper option)
-    let bypassMethod: BypassMethod | undefined = this.opts.bypassMethod;
-    if (bypassMethod === undefined && this.opts.useCloudscraper !== undefined) {
-      // Legacy support: useCloudscraper=true => "both" for better reliability
-      bypassMethod = this.opts.useCloudscraper ? "both" : undefined;
-    }
-    
+
     const client = new HttpClient({
       baseUrl: base,
       timeoutMs: this.opts.timeoutMs,
       logger: this.opts.logger,
       auth,
-      bypassMethod,
-      pythonPath: this.opts.pythonPath,
       loginCredentials: loginCreds,
-    } as any);
+    });
     this.clientCache.set(base, client);
     return { base, client };
   }
