@@ -1,18 +1,24 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "outDir": "dist",
-    "rootDir": "src",
+    "target": "es2021",
+    "lib": [
+      "es2021"
+    ],
+    "jsx": "react-jsx",
+    "module": "es2022",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "esModuleInterop": true,
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
     "strict": true,
-    "sourceMap": true,
-    "declaration": true
+    "skipLibCheck": true
   },
-  "include": ["src/**/*"]
+  "include": [
+    "worker-configuration.d.ts",
+    "src/**/*.ts"
+  ]
 }
-

@@ -33,8 +33,8 @@ export class Logger {
 
   private write(level: string, msg: string, meta?: unknown) {
     const line = meta ? `${msg} ${safeJson(meta)}` : msg;
-    // Log to stderr per spec
-    process.stderr.write(`[${new Date().toISOString()}] ${level} ${line}\n`);
+    // Use console for Workers compatibility
+    console.log(`[${new Date().toISOString()}] ${level} ${line}`);
   }
 }
 
